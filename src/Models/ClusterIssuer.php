@@ -3,6 +3,6 @@
 class ClusterIssuer extends Model
 {
 
-    protected $apiVersion = 'certmanager.k8s.io/v1alpha2';
+    protected $apiVersion = 'cert-manager.io/v1alpha3';
 
 }

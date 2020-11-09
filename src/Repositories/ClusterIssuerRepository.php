@@ -9,6 +9,8 @@ class ClusterIssuerRepository extends Repository
 
     protected $uri = 'clusterissuers';
 
+    protected $namespace = false;
+
     protected function createCollection($response)
     {
         return new ClusterIssuerCollection($response['items']);
