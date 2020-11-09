@@ -1,4 +1,4 @@
 {
-    "kind": "Issuer",
+    "kind": "ClusterIssuer",
     "apiVersion": "certmanager.k8s.io/v1alpha2"
 }

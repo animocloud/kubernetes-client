@@ -1,6 +1,6 @@
 <?php namespace Maclof\Kubernetes\Models;
 
-class Issuer extends Model
+class ClusterIssuer extends Model
 {
 
     protected $apiVersion = 'certmanager.k8s.io/v1alpha2';

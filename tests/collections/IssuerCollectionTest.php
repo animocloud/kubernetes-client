@@ -12,9 +12,7 @@ class IssuerCollectionTest extends TestCase
 
     protected function getIssuerCollection()
     {
-        $issuerCollection = new IssuerCollection($this->items);
-
-        return $issuerCollection;
+        return new IssuerCollection($this->items);
     }
 
     public function test_get_items()
