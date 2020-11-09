@@ -59,6 +59,7 @@ use Maclof\Kubernetes\Models\PersistentVolume;
  * @method HorizontalPodAutoscalerRepository horizontalPodAutoscalers()
  * @method CertificateRepository certificates()
  * @method IssuersRepository issuers()
+ * @method ClusterIssuersRepository clusterIssuers()
  */
 class Client
 {
@@ -237,7 +238,7 @@ class Client
 
 	/**
 	 * Set the options from a kubeconfig.
-	 * 
+	 *
 	 * @param  string $content
 	 * @param  string $contentType
 	 * @throws \InvalidArgumentException
@@ -349,13 +350,13 @@ class Client
 		}
 
 		$this->setOptions($options, true);
-		
+
 		$this->guzzleClient = $this->createGuzzleClient();
 	}
 
 	/**
 	 * Set the options from a kubeconfig file.
-	 * 
+	 *
 	 * @param  string $filePath
 	 * @throws \InvalidArgumentException
 	 */
@@ -487,7 +488,7 @@ class Client
 		if ($namespace) {
 			$baseUri .= '/namespaces/' . $this->namespace;
 		}
-		
+
 		if ($uri === '/healthz') {
 			$requestUri = $uri;
 		} else {
@@ -663,7 +664,7 @@ class Client
 		{
 			return $this->sendRequest('GET', '/healthz');
 		}
-	
+
 	/**
 	 * Magic call method to grab a class instance.
 	 *
