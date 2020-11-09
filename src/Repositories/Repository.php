@@ -1,7 +1,10 @@
 <?php namespace Maclof\Kubernetes\Repositories;
 
+use Closure;
 use Maclof\Kubernetes\Models\Model;
 use Maclof\Kubernetes\Models\DeleteOptions;
+use Maclof\Kubernetes\Repositories\Utils\JSONStreamingParser;
+use Maclof\Kubernetes\Repositories\Utils\JSONStreamingListener;
 
 abstract class Repository
 {
@@ -40,6 +43,14 @@ abstract class Repository
 	 */
 	protected $fieldSelector = [];
 
+
+	/**
+	 * The default class namespace of the repositories
+	 * 
+	 * @var string
+	 */
+	protected $modelClassNamespace = 'Maclof\Kubernetes\Models\\';
+
 	/**
 	 * The constructor.
 	 *
@@ -58,16 +69,17 @@ abstract class Repository
 	 * @param  array   $query
 	 * @param  mixed   $body
 	 * @param  boolean $namespace
+	 * @param  array   $requestOptions
 	 * @return array
 	 */
-	protected function sendRequest($method, $uri, $query = [], $body = [], $namespace = true)
+	protected function sendRequest($method, $uri, $query = [], $body = [], $namespace = true, array $requestOptions = [])
 	{
 		$apiVersion = $this->getApiVersion();
 		if ($apiVersion == 'v1') {
 			$apiVersion = null;
 		}
 
-		return $this->client->sendRequest($method, $uri, $query, $body, $namespace, $apiVersion);
+		return $this->client->sendRequest($method, $uri, $query, $body, $namespace, $apiVersion, $requestOptions);
 	}
 
 	/**
@@ -82,7 +94,7 @@ abstract class Repository
 		}
 
 		$className = str_replace('Repository', '', class_basename($this));
-		$classPath = 'Maclof\Kubernetes\Models\\' . $className;
+		$classPath = $this->modelClassNamespace . $className;
 
 		if (!class_exists($classPath)) {
 			return;
@@ -237,18 +249,21 @@ abstract class Repository
 	/**
 	 * Get a collection of items.
 	 *
-	 * @return \Maclof\Kubernetes\Collections\Collection
+	 * @param  array $query
+	 * @return mixed
 	 */
-	public function find()
+	public function find(array $query = [])
 	{
-		$query = array_filter([
+		$query = array_filter(array_merge([
 			'labelSelector' => $this->getLabelSelectorQuery(),
 			'fieldSelector' => $this->getFieldSelectorQuery(),
-		]);
-
-		$response = $this->sendRequest('GET', '/' . $this->uri, $query, null, $this->namespace);
+		], $query), function ($value) {
+			return !is_null($value) && strlen($value) > 0;
+		});
 
 		$this->resetParameters();
+
+		$response = $this->sendRequest('GET', '/' . $this->uri, $query, null, $this->namespace);
 
 		return $this->createCollection($response);
 	}
@@ -261,6 +276,42 @@ abstract class Repository
 	public function first()
 	{
 		return $this->find()->first();
+	}
+
+	/**
+	 * Watch a model for changes.
+	 *
+	 * @param  \Maclof\Kubernetes\Models\Model $model
+	 * @param  \Closure $closure
+	 * @param  array $query
+	 * @return void
+	 */
+	public function watch(Model $model, Closure $closure, array $query = [])
+	{
+		$this->setFieldSelector([
+			'metadata.name' => $model->getMetadata('name'),
+		]);
+
+		$query = array_filter(array_merge([
+			'watch'          => true,
+			'timeoutSeconds' => 30,
+			'labelSelector'  => $this->getLabelSelectorQuery(),
+			'fieldSelector'  => $this->getFieldSelectorQuery(),
+		], $query), function ($value) {
+			return !is_null($value) && strlen($value) > 0;
+		});
+
+		$this->resetParameters();
+
+		$response = $this->sendRequest('GET', '/' . $this->uri, $query, null, $this->namespace, [
+			'stream'       => true,
+			'read_timeout' => 5,
+		]);
+
+		$stream = $response->getBody();
+
+		$parser = new JSONStreamingParser($stream, new JSONStreamingListener($closure));
+		$parser->parse();
 	}
 
 	/**

@@ -1,3 +1,4 @@
+
 # Kubernetes Client
 [![Build Status](https://api.travis-ci.org/maclof/kubernetes-client.svg?branch=master)](https://travis-ci.org/maclof/kubernetes-client)
 
@@ -38,10 +39,12 @@ $ composer require maclof/kubernetes-client
 
 ### extensions/v1beta1
 * Daemon Sets
-* Ingresses
 
 ### networking.k8s.io/v1
 * Network Policies
+
+### networking.k8s.io/v1beta1
+* Ingresses
 
 ### certmanager.k8s.io/v1alpha1
 * Certificates
@@ -140,6 +143,7 @@ $client->things(); //ThingRepository
 ## Usage Examples
 
 ### Create/Update a Replication Controller
+The below example uses an array to specify the replication controller's attributes. You can specify the attributes either as an array, JSON encoded string or a YAML encoded string. The second parameter to the model constructor is the data type and defaults to array.
 ```php
 use Maclof\Kubernetes\Models\ReplicationController;
 
