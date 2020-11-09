@@ -43,6 +43,7 @@ class RepositoryRegistry implements \ArrayAccess, \Countable
         // certmanager.k8s.io/v1alpha1
         'certificates'           => Repositories\CertificateRepository::class,
         'issuers'                => Repositories\IssuerRepository::class,
+        'clusterIssuers'         => Repositories\ClusterIssuerRepository::class,
 
     ];
 
