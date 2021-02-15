@@ -1,4 +1,4 @@
 {
     "kind": "Issuer",
-    "apiVersion": "cert-manager.io/v1alpha3"
+    "apiVersion": "cert-manager.io/v1"
 }
