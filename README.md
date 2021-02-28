@@ -91,51 +91,93 @@ $jobStartTime = $client->jobs()->find()->getJsonPath('$.status.startTime')[0];
 
 ### Insecure HTTP
 ```php
+use Maclof\Kubernetes\Client;
 $client = new Client([
 	'master' => 'http://master.mycluster.com',
 ]);
 ```
 
-### Using TLS Certificates (Client Certificate Validation)
+### Secure HTTPS (CA + Client Certificate Validation)
 ```php
-$client = new Client([
-	'master'      => 'https://master.mycluster.com',
-    	'ca_cert'     => '/etc/kubernetes/ssl/ca.crt',
-    	'client_cert' => '/etc/kubernetes/ssl/client.crt',
-    	'client_key'  => '/etc/kubernetes/ssl/client.key',
+use Maclof\Kubernetes\Client;
+use Http\Adapter\Guzzle6\Client as Guzzle6Client;
+$httpClient = Guzzle6Client::createWithConfig([
+	'verify' => '/etc/kubernetes/ssl/ca.crt',
+	'cert' => '/etc/kubernetes/ssl/client.crt',
+	'ssl_key' => '/etc/kubernetes/ssl/client.key',
 ]);
+$client = new Client([
+	'master' => 'https://master.mycluster.com',
+], null, $httpClient);
+```
+
+### Insecure HTTPS (CA Certificate Verification Disabled)
+```php
+use Maclof\Kubernetes\Client;
+use Http\Adapter\Guzzle6\Client as Guzzle6Client;
+$httpClient = Guzzle6Client::createWithConfig([
+	'verify' => false,
+]);
+$client = new Client([
+	'master' => 'https://master.mycluster.com',
+], null, $httpClient);
 ```
 
 ### Using Basic Auth
 ```php
+use Maclof\Kubernetes\Client;
 $client = new Client([
-	'master'   => 'https://master.mycluster.com',
-    	'username' => 'admin',
-    	'password' => 'abc123',
+	'master' => 'https://master.mycluster.com',
+	'username' => 'admin',
+	'password' => 'abc123',
 ]);
 ```
 
 ### Using a Service Account
 ```php
-$client = new Client([
-	'master'  => 'https://master.mycluster.com',
-	'ca_cert' => '/var/run/secrets/kubernetes.io/serviceaccount/ca.crt',
-	'token'   => '/var/run/secrets/kubernetes.io/serviceaccount/token',
+use Maclof\Kubernetes\Client;
+use Http\Adapter\Guzzle6\Client as Guzzle6Client;
+$httpClient = Guzzle6Client::createWithConfig([
+	'verify' => '/var/run/secrets/kubernetes.io/serviceaccount/ca.crt',
 ]);
+$client = new Client([
+	'master' => 'https://master.mycluster.com',
+	'token' => '/var/run/secrets/kubernetes.io/serviceaccount/token',
+], null, $httpClient);
+```
+
+### Parsing a kubeconfig file
+```php
+use Maclof\Kubernetes\Client;
+
+// Parsing from the file data directly
+$config = Client::parseKubeConfig('kubeconfig yaml data');
+
+// Parsing from the file path
+$config = Client::parseKubeConfigFile('~/.kube/config.yml');
+
+// Example config that may be returned
+// You would then feed these options into the http/kubernetes client constructors.
+$config = [
+	'master' => 'https://master.mycluster.com',
+	'ca_cert' => '/temp/path/ca.crt',
+	'client_cert' => '/temp/path/client.crt',
+	'client_key' => '/temp/path/client.key',
+];
 ```
 
 ## Extending a library
 
 ### Custom repositories
 ```php
+use Maclof\Kubernetes\Client;
+
 $repositories = new RepositoryRegistry();
-
-
 $repositories['things'] = MyApp\Kubernetes\Repository\ThingRepository::class;
 
 $client = new Client([
-    'master' => 'https://master.mycluster.com','
-], null, $repositories);
+	'master' => 'https://master.mycluster.com',
+], $repositories);
 
 $client->things(); //ThingRepository
 ```
@@ -202,7 +244,7 @@ use Maclof\Kubernetes\Models\DeleteOptions;
 
 $client->replicationControllers()->delete(
 	$replicationController,
-   	new DeleteOptions(['propagationPolicy' => 'Background'])
+	new DeleteOptions(['propagationPolicy' => 'Background'])
 );
 ```
 
