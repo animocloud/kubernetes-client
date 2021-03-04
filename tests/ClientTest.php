@@ -57,7 +57,7 @@ class ClientTest extends TestCase
 
         $client = new Client([], $mockGuzzleClient);
         $response = $client->sendRequest(
-            'GET', 'v1/deployments', [], [], true, null, ['stream' => true]
+            'GET', '/v1/deployments', [], [], true, null, ['stream' => true]
         );
 
         $this->assertInstanceOf(\GuzzleHttp\Psr7\Response::class, $response);
@@ -65,22 +65,23 @@ class ClientTest extends TestCase
 
     public function testStreamGetsResourceVersion()
     {
-        var_dump($this->getFixture('deployments/table.json'));
-        die;
-        
-        $mock = new \GuzzleHttp\Handler\MockHandler([
-            new \GuzzleHttp\Psr7\Response(200, [], $this->getFixture('deployments/table.json')),
-            new \GuzzleHttp\Psr7\Response(200, [], $this->getFixture('deployments/table.json')),
-            new \GuzzleHttp\Exception\RequestException('Error Communicating with Server', new \GuzzleHttp\Psr7\Request('GET', 'test'))
-        ]);
+        $deploymentsTable = $this->getFixture('deployments/table.json');
 
-        $handlerStack = \GuzzleHttp\HandlerStack::create($mock);
-        $guzzleClient = new \GuzzleHttp\Client(['handler' => $handlerStack]);
-        $client = new Client([], $guzzleClient);
+        $mockGuzzleClient = Mockery::mock('GuzzleHttp\Client');
+        $mockGuzzleClient->shouldReceive('request')->andReturn(
+            new \GuzzleHttp\Psr7\Response(200, [], $deploymentsTable)
+        );
+
+        $client = new Client([], $mockGuzzleClient);
 
         $response = $client->sendRequest(
-            'GET', 'v1/deployments', [], [], true, null, ['stream' => true]
+            'GET', '/v1/deployments', [], [], true, null, ['stream' => true]
         );
+
+        $requestOptions = $client->getRequestOptions();
+
+        $this->assertArrayHasKey('resourceVersion', $requestOptions['query']);
+        $this->assertSame('4372200', $requestOptions['query']['resourceVersion']);
     }
 
 	// public function test_get_pods()

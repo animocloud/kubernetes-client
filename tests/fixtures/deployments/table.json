@@ -66,14 +66,14 @@
   "rows": [
     {
       "cells": [
-        "animo-socket-server",
+        "platform-app",
         "1/1",
         1,
         1,
         "5d20h",
-        "socket-server",
-        "registry.gitlab.com/animocloud/socket-server:latest",
-        "app=animo-socket-server"
+        "app",
+        "registry/app:latest",
+        "app=platform-app"
       ],
       "object": {
         "apiVersion": "meta.k8s.io/v1",
@@ -81,14 +81,14 @@
         "metadata": {
           "annotations": {
             "deployment.kubernetes.io/revision": "1",
-            "field.cattle.io/publicEndpoints": "[{\"addresses\":[\"10.43.254.237\"],\"port\":443,\"protocol\":\"HTTPS\",\"serviceName\":\"animo-core:socket-server\",\"ingressName\":\"animo-core:socket-server\",\"hostname\":\"eu1.animocloud.com\",\"path\":\"/socket.io\",\"allNodes\":false}]",
-            "meta.helm.sh/release-name": "animo-socket-server",
-            "meta.helm.sh/release-namespace": "animo-core"
+            "field.cattle.io/publicEndpoints": "[{\"addresses\":[\"0.0.0.0\"],\"port\":443,\"protocol\":\"HTTPS\",\"serviceName\":\"platform-core:app\",\"ingressName\":\"platform-core:app\",\"hostname\":\"hostname.com\",\"path\":\"/pathname\",\"allNodes\":false}]",
+            "meta.helm.sh/release-name": "platform-app",
+            "meta.helm.sh/release-namespace": "platform-core"
           },
           "creationTimestamp": "2021-02-26T12:51:48Z",
           "generation": 2,
           "labels": {
-            "app": "animo-socket-server",
+            "app": "platform-app",
             "app.kubernetes.io/managed-by": "Helm"
           },
           "managedFields": [
@@ -137,37 +137,17 @@
                     },
                     "f:spec": {
                       "f:containers": {
-                        "k:{\"name\":\"socket-server\"}": {
+                        "k:{\"name\":\"app\"}": {
                           ".": {},
                           "f:env": {
-                            ".": {},
-                            "k:{\"name\":\"ECHO_SERVER_PORT\"}": {
-                              ".": {},
-                              "f:name": {},
-                              "f:value": {}
-                            },
-                            "k:{\"name\":\"REDIS_SERVER_HOST\"}": {
-                              ".": {},
-                              "f:name": {},
-                              "f:value": {}
-                            },
-                            "k:{\"name\":\"REDIS_SERVER_KEY_PREFIX\"}": {
-                              ".": {},
-                              "f:name": {},
-                              "f:value": {}
-                            },
-                            "k:{\"name\":\"REDIS_SERVER_PORT\"}": {
-                              ".": {},
-                              "f:name": {},
-                              "f:value": {}
-                            }
+                            ".": {}
                           },
                           "f:image": {},
                           "f:imagePullPolicy": {},
                           "f:name": {},
                           "f:ports": {
                             ".": {},
-                            "k:{\"containerPort\":8999,\"protocol\":\"TCP\"}": {
+                            "k:{\"containerPort\":9876,\"protocol\":\"TCP\"}": {
                               ".": {},
                               "f:containerPort": {},
                               "f:name": {},
@@ -242,11 +222,11 @@
               "time": "2021-02-26T12:53:02Z"
             }
           ],
-          "name": "animo-socket-server",
-          "namespace": "animo-core",
+          "name": "platform-app",
+          "namespace": "platform-core",
           "resourceVersion": "25781",
-          "selfLink": "/apis/apps/v1/namespaces/animo-core/deployments/animo-socket-server",
-          "uid": "b18b5d79-a240-4697-88e6-7ebb7cb414ee"
+          "selfLink": "/apis/apps/v1/namespaces/platform-core/deployments/platform-app",
+          "uid": "d18d5d90-a340-4697-XXXX-7ebb3cb414ce"
         }
       }
     }

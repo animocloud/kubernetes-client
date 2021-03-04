@@ -140,6 +140,11 @@ class Client
 	 */
 	protected $guzzleClient;
 
+    /**
+     * @var array|null
+     */
+	protected $requestOptions;
+
 	/**
 	 * The exec channels for result messages.
 	 *
@@ -469,6 +474,14 @@ class Client
 		return $this->guzzleClient;
 	}
 
+    /**
+     * @return array|null
+     */
+	public function getRequestOptions()
+    {
+        return $this->requestOptions;
+    }
+
 	/**
 	 * Send a request.
 	 *
@@ -484,6 +497,8 @@ class Client
 	 */
 	public function sendRequest($method, $uri, $query = [], $body = [], $namespace = true, $apiVersion = null, array $requestOptions = [])
 	{
+        $this->requestOptions = $requestOptions;
+
 		$baseUri = $apiVersion ? 'apis/' . $apiVersion : 'api/' . $this->apiVersion;
 		if ($namespace) {
 			$baseUri .= '/namespaces/' . $this->namespace;
@@ -496,24 +511,28 @@ class Client
 		}
 
 		if (is_array($query) && count($query) > 0) {
-			$requestOptions['query'] = $query;
+			$this->requestOptions['query'] = $query;
 		}
 		if ($body !== null) {
-			$requestOptions['body'] = is_array($body) ? json_encode($body, JSON_FORCE_OBJECT) : $body;
+			$this->requestOptions['body'] = is_array($body) ? json_encode($body, JSON_FORCE_OBJECT) : $body;
 		}
 
 		if ($method === 'PATCH') {
-			$requestOptions['headers'] = $this->patchHeader;
+			$this->requestOptions['headers'] = $this->patchHeader;
 		}
 
 		try {
-            if ($this->isStreamTypeRequest($requestOptions)) {
-                $requestOptions['query']['resourceVersion'] = $this->getResourceVersionFromTable($requestUri);
+            if ($this->isStreamTypeRequest()) {
+                $resourceVersion = $this->getResourceVersionFromTable($requestUri);
+
+                if (! is_null($resourceVersion)) {
+                    $this->requestOptions['query']['resourceVersion'] = $resourceVersion;
+                }
             }
 
-			$response = $this->guzzleClient->request($method, $requestUri, $requestOptions);
+			$response = $this->guzzleClient->request($method, $requestUri, $this->requestOptions);
 
-			if ($this->isStreamTypeRequest($requestOptions)) {
+			if ($this->isStreamTypeRequest()) {
 				return $response;
 			}
 
@@ -543,30 +562,31 @@ class Client
      */
 	protected function getResourceVersionFromTable($requestUri)
     {
-        // var_dump($requestUri);
-        // die;
-
         $response = $this->guzzleClient->request('GET', $requestUri, [
             'headers' => [
                 'Accept' => "application/json;as=Table;v=v1;g=meta.k8s.io,application/json;as=Table;v=v1beta1;g=meta.k8s.io,application/json"
             ]
         ]);
 
-        $responseBody = $response->getBody()->getContents();
+        $responseBody = (string) $response->getBody();
 
         $jsonResponse = json_decode($responseBody, true);
 
-        var_dump($responseBody);
-        die;
+        if (is_array($jsonResponse) &&
+            array_key_exists('metadata', $jsonResponse)
+        ) {
+            return array_key_exists('resourceVersion', $jsonResponse['metadata']) ? $jsonResponse['metadata']['resourceVersion'] : null;
+        }
+
+        return null;
     }
 
     /**
-     * @param array $requestOptions
      * @return bool
      */
-	protected function isStreamTypeRequest(array $requestOptions)
+	protected function isStreamTypeRequest()
     {
-        return array_key_exists('stream', $requestOptions) && $requestOptions['stream'] === true;
+        return array_key_exists('stream', $this->requestOptions) && $this->requestOptions['stream'] === true;
     }
 
 	/**
