@@ -288,9 +288,11 @@ abstract class Repository
 	 */
 	public function watch(Model $model, Closure $closure, array $query = [])
 	{
-		$this->setFieldSelector([
-			'metadata.name' => $model->getMetadata('name'),
-		]);
+        if ($metaName = $model->getMetadata('name') !== null) {
+            $this->setFieldSelector([
+                'metadata.name' => $metaName,
+            ]);
+        }
 
 		$query = array_filter(array_merge([
 			'watch'          => true,
