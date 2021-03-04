@@ -1,0 +1,254 @@
+{
+  "apiVersion": "meta.k8s.io/v1",
+  "columnDefinitions": [
+    {
+      "description": "Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names",
+      "format": "name",
+      "name": "Name",
+      "priority": 0,
+      "type": "string"
+    },
+    {
+      "description": "Number of the pod with ready state",
+      "format": "",
+      "name": "Ready",
+      "priority": 0,
+      "type": "string"
+    },
+    {
+      "description": "Total number of non-terminated pods targeted by this deployment that have the desired template spec.",
+      "format": "",
+      "name": "Up-to-date",
+      "priority": 0,
+      "type": "string"
+    },
+    {
+      "description": "Total number of available pods (ready for at least minReadySeconds) targeted by this deployment.",
+      "format": "",
+      "name": "Available",
+      "priority": 0,
+      "type": "string"
+    },
+    {
+      "description": "CreationTimestamp is a timestamp representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations. Clients may not set this value. It is represented in RFC3339 form and is in UTC.\n\nPopulated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+      "format": "",
+      "name": "Age",
+      "priority": 0,
+      "type": "string"
+    },
+    {
+      "description": "Names of each container in the template.",
+      "format": "",
+      "name": "Containers",
+      "priority": 1,
+      "type": "string"
+    },
+    {
+      "description": "Images referenced by each container in the template.",
+      "format": "",
+      "name": "Images",
+      "priority": 1,
+      "type": "string"
+    },
+    {
+      "description": "Label selector for pods. Existing ReplicaSets whose pods are selected by this will be the ones affected by this deployment.",
+      "format": "",
+      "name": "Selector",
+      "priority": 1,
+      "type": "string"
+    }
+  ],
+  "kind": "Table",
+  "metadata": {
+    "resourceVersion": "4372200",
+    "selfLink": "/apis/apps/v1/deployments"
+  },
+  "rows": [
+    {
+      "cells": [
+        "animo-socket-server",
+        "1/1",
+        1,
+        1,
+        "5d20h",
+        "socket-server",
+        "registry.gitlab.com/animocloud/socket-server:latest",
+        "app=animo-socket-server"
+      ],
+      "object": {
+        "apiVersion": "meta.k8s.io/v1",
+        "kind": "PartialObjectMetadata",
+        "metadata": {
+          "annotations": {
+            "deployment.kubernetes.io/revision": "1",
+            "field.cattle.io/publicEndpoints": "[{\"addresses\":[\"10.43.254.237\"],\"port\":443,\"protocol\":\"HTTPS\",\"serviceName\":\"animo-core:socket-server\",\"ingressName\":\"animo-core:socket-server\",\"hostname\":\"eu1.animocloud.com\",\"path\":\"/socket.io\",\"allNodes\":false}]",
+            "meta.helm.sh/release-name": "animo-socket-server",
+            "meta.helm.sh/release-namespace": "animo-core"
+          },
+          "creationTimestamp": "2021-02-26T12:51:48Z",
+          "generation": 2,
+          "labels": {
+            "app": "animo-socket-server",
+            "app.kubernetes.io/managed-by": "Helm"
+          },
+          "managedFields": [
+            {
+              "apiVersion": "apps/v1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:metadata": {
+                  "f:annotations": {
+                    ".": {},
+                    "f:field.cattle.io/publicEndpoints": {},
+                    "f:meta.helm.sh/release-name": {},
+                    "f:meta.helm.sh/release-namespace": {}
+                  },
+                  "f:labels": {
+                    ".": {},
+                    "f:app": {},
+                    "f:app.kubernetes.io/managed-by": {}
+                  }
+                },
+                "f:spec": {
+                  "f:minReadySeconds": {},
+                  "f:progressDeadlineSeconds": {},
+                  "f:replicas": {},
+                  "f:revisionHistoryLimit": {},
+                  "f:selector": {
+                    "f:matchLabels": {
+                      ".": {},
+                      "f:app": {}
+                    }
+                  },
+                  "f:strategy": {
+                    "f:rollingUpdate": {
+                      ".": {},
+                      "f:maxSurge": {},
+                      "f:maxUnavailable": {}
+                    },
+                    "f:type": {}
+                  },
+                  "f:template": {
+                    "f:metadata": {
+                      "f:labels": {
+                        ".": {},
+                        "f:app": {}
+                      }
+                    },
+                    "f:spec": {
+                      "f:containers": {
+                        "k:{\"name\":\"socket-server\"}": {
+                          ".": {},
+                          "f:env": {
+                            ".": {},
+                            "k:{\"name\":\"ECHO_SERVER_PORT\"}": {
+                              ".": {},
+                              "f:name": {},
+                              "f:value": {}
+                            },
+                            "k:{\"name\":\"REDIS_SERVER_HOST\"}": {
+                              ".": {},
+                              "f:name": {},
+                              "f:value": {}
+                            },
+                            "k:{\"name\":\"REDIS_SERVER_KEY_PREFIX\"}": {
+                              ".": {},
+                              "f:name": {},
+                              "f:value": {}
+                            },
+                            "k:{\"name\":\"REDIS_SERVER_PORT\"}": {
+                              ".": {},
+                              "f:name": {},
+                              "f:value": {}
+                            }
+                          },
+                          "f:image": {},
+                          "f:imagePullPolicy": {},
+                          "f:name": {},
+                          "f:ports": {
+                            ".": {},
+                            "k:{\"containerPort\":8999,\"protocol\":\"TCP\"}": {
+                              ".": {},
+                              "f:containerPort": {},
+                              "f:name": {},
+                              "f:protocol": {}
+                            }
+                          },
+                          "f:resources": {},
+                          "f:terminationMessagePath": {},
+                          "f:terminationMessagePolicy": {}
+                        }
+                      },
+                      "f:dnsPolicy": {},
+                      "f:imagePullSecrets": {
+                        ".": {},
+                        "k:{\"name\":\"registry-eng-key\"}": {
+                          ".": {},
+                          "f:name": {}
+                        }
+                      },
+                      "f:restartPolicy": {},
+                      "f:schedulerName": {},
+                      "f:securityContext": {},
+                      "f:terminationGracePeriodSeconds": {}
+                    }
+                  }
+                }
+              },
+              "manager": "Go-http-client",
+              "operation": "Update",
+              "time": "2021-02-26T12:52:02Z"
+            },
+            {
+              "apiVersion": "apps/v1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:metadata": {
+                  "f:annotations": {
+                    "f:deployment.kubernetes.io/revision": {}
+                  }
+                },
+                "f:status": {
+                  "f:availableReplicas": {},
+                  "f:conditions": {
+                    ".": {},
+                    "k:{\"type\":\"Available\"}": {
+                      ".": {},
+                      "f:lastTransitionTime": {},
+                      "f:lastUpdateTime": {},
+                      "f:message": {},
+                      "f:reason": {},
+                      "f:status": {},
+                      "f:type": {}
+                    },
+                    "k:{\"type\":\"Progressing\"}": {
+                      ".": {},
+                      "f:lastTransitionTime": {},
+                      "f:lastUpdateTime": {},
+                      "f:message": {},
+                      "f:reason": {},
+                      "f:status": {},
+                      "f:type": {}
+                    }
+                  },
+                  "f:observedGeneration": {},
+                  "f:readyReplicas": {},
+                  "f:replicas": {},
+                  "f:updatedReplicas": {}
+                }
+              },
+              "manager": "k3s",
+              "operation": "Update",
+              "time": "2021-02-26T12:53:02Z"
+            }
+          ],
+          "name": "animo-socket-server",
+          "namespace": "animo-core",
+          "resourceVersion": "25781",
+          "selfLink": "/apis/apps/v1/namespaces/animo-core/deployments/animo-socket-server",
+          "uid": "b18b5d79-a240-4697-88e6-7ebb7cb414ee"
+        }
+      }
+    }
+  ]
+}

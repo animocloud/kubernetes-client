@@ -495,7 +495,7 @@ class Client
 			$requestUri = $baseUri . $uri;
 		}
 
-		if (is_array($query) && !empty($query)) {
+		if (is_array($query) && count($query) > 0) {
 			$requestOptions['query'] = $query;
 		}
 		if ($body !== null) {
@@ -507,9 +507,13 @@ class Client
 		}
 
 		try {
+            if ($this->isStreamTypeRequest($requestOptions)) {
+                $requestOptions['query']['resourceVersion'] = $this->getResourceVersionFromTable($requestUri);
+            }
+
 			$response = $this->guzzleClient->request($method, $requestUri, $requestOptions);
 
-			if (!empty($options['stream'])) {
+			if ($this->isStreamTypeRequest($requestOptions)) {
 				return $response;
 			}
 
@@ -533,6 +537,37 @@ class Client
 			throw new BadRequestException($responseBody, 0, $e);
 		}
 	}
+
+    /**
+     * @param string $requestUri
+     */
+	protected function getResourceVersionFromTable($requestUri)
+    {
+        // var_dump($requestUri);
+        // die;
+
+        $response = $this->guzzleClient->request('GET', $requestUri, [
+            'headers' => [
+                'Accept' => "application/json;as=Table;v=v1;g=meta.k8s.io,application/json;as=Table;v=v1beta1;g=meta.k8s.io,application/json"
+            ]
+        ]);
+
+        $responseBody = $response->getBody()->getContents();
+
+        $jsonResponse = json_decode($responseBody, true);
+
+        var_dump($responseBody);
+        die;
+    }
+
+    /**
+     * @param array $requestOptions
+     * @return bool
+     */
+	protected function isStreamTypeRequest(array $requestOptions)
+    {
+        return array_key_exists('stream', $requestOptions) && $requestOptions['stream'] === true;
+    }
 
 	/**
 	 * Check if an upgrade request is required.
