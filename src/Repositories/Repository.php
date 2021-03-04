@@ -288,7 +288,8 @@ abstract class Repository
 	 */
 	public function watch(Model $model, Closure $closure, array $query = [])
 	{
-        if ($metaName = $model->getMetadata('name') !== null) {
+        // don't filter by the name if one hasn't been provided
+        if (! is_null($metaName = $model->getMetadata('name'))) {
             $this->setFieldSelector([
                 'metadata.name' => $metaName,
             ]);

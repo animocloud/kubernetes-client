@@ -522,6 +522,7 @@ class Client
 		}
 
 		try {
+            // used when "watching" a resource
             if ($this->isStreamTypeRequest()) {
                 $resourceVersion = $this->getResourceVersionFromTable($requestUri);
 
@@ -558,6 +559,10 @@ class Client
 	}
 
     /**
+     *
+     * When using the watch method, we should get the latest resource revision which will be used as a "from" point
+     * and ignore information before this
+     *
      * @param string $requestUri
      */
 	protected function getResourceVersionFromTable($requestUri)
