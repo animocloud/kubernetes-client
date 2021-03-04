@@ -46,7 +46,7 @@ abstract class Repository
 
 	/**
 	 * The default class namespace of the repositories
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $modelClassNamespace = 'Maclof\Kubernetes\Models\\';
@@ -325,6 +325,16 @@ abstract class Repository
 		$this->resetParameters();
 		return !is_null($this->setFieldSelector(['metadata.name' => $name])->first());
 	}
+
+    /**
+     * @return $this
+     */
+	public function allNamespaces()
+    {
+        $this->namespace = false;
+
+        return $this;
+    }
 
 	/**
 	 * Create a collection of models from the response.
