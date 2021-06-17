@@ -46,7 +46,7 @@ abstract class Repository
 
 	/**
 	 * The default class namespace of the repositories
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $modelClassNamespace = 'Maclof\Kubernetes\Models\\';
@@ -288,9 +288,12 @@ abstract class Repository
 	 */
 	public function watch(Model $model, Closure $closure, array $query = [])
 	{
-		$this->setFieldSelector([
-			'metadata.name' => $model->getMetadata('name'),
-		]);
+        // don't filter by the name if one hasn't been provided
+        if (! is_null($metaName = $model->getMetadata('name'))) {
+            $this->setFieldSelector([
+                'metadata.name' => $metaName,
+            ]);
+        }
 
 		$query = array_filter(array_merge([
 			'watch'          => true,
@@ -325,6 +328,16 @@ abstract class Repository
 		$this->resetParameters();
 		return !is_null($this->setFieldSelector(['metadata.name' => $name])->first());
 	}
+
+    /**
+     * @return $this
+     */
+	public function allNamespaces()
+    {
+        $this->namespace = false;
+
+        return $this;
+    }
 
 	/**
 	 * Create a collection of models from the response.

@@ -1,0 +1,234 @@
+{
+  "apiVersion": "meta.k8s.io/v1",
+  "columnDefinitions": [
+    {
+      "description": "Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names",
+      "format": "name",
+      "name": "Name",
+      "priority": 0,
+      "type": "string"
+    },
+    {
+      "description": "Number of the pod with ready state",
+      "format": "",
+      "name": "Ready",
+      "priority": 0,
+      "type": "string"
+    },
+    {
+      "description": "Total number of non-terminated pods targeted by this deployment that have the desired template spec.",
+      "format": "",
+      "name": "Up-to-date",
+      "priority": 0,
+      "type": "string"
+    },
+    {
+      "description": "Total number of available pods (ready for at least minReadySeconds) targeted by this deployment.",
+      "format": "",
+      "name": "Available",
+      "priority": 0,
+      "type": "string"
+    },
+    {
+      "description": "CreationTimestamp is a timestamp representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations. Clients may not set this value. It is represented in RFC3339 form and is in UTC.\n\nPopulated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+      "format": "",
+      "name": "Age",
+      "priority": 0,
+      "type": "string"
+    },
+    {
+      "description": "Names of each container in the template.",
+      "format": "",
+      "name": "Containers",
+      "priority": 1,
+      "type": "string"
+    },
+    {
+      "description": "Images referenced by each container in the template.",
+      "format": "",
+      "name": "Images",
+      "priority": 1,
+      "type": "string"
+    },
+    {
+      "description": "Label selector for pods. Existing ReplicaSets whose pods are selected by this will be the ones affected by this deployment.",
+      "format": "",
+      "name": "Selector",
+      "priority": 1,
+      "type": "string"
+    }
+  ],
+  "kind": "Table",
+  "metadata": {
+    "resourceVersion": "4372200",
+    "selfLink": "/apis/apps/v1/deployments"
+  },
+  "rows": [
+    {
+      "cells": [
+        "platform-app",
+        "1/1",
+        1,
+        1,
+        "5d20h",
+        "app",
+        "registry/app:latest",
+        "app=platform-app"
+      ],
+      "object": {
+        "apiVersion": "meta.k8s.io/v1",
+        "kind": "PartialObjectMetadata",
+        "metadata": {
+          "annotations": {
+            "deployment.kubernetes.io/revision": "1",
+            "field.cattle.io/publicEndpoints": "[{\"addresses\":[\"0.0.0.0\"],\"port\":443,\"protocol\":\"HTTPS\",\"serviceName\":\"platform-core:app\",\"ingressName\":\"platform-core:app\",\"hostname\":\"hostname.com\",\"path\":\"/pathname\",\"allNodes\":false}]",
+            "meta.helm.sh/release-name": "platform-app",
+            "meta.helm.sh/release-namespace": "platform-core"
+          },
+          "creationTimestamp": "2021-02-26T12:51:48Z",
+          "generation": 2,
+          "labels": {
+            "app": "platform-app",
+            "app.kubernetes.io/managed-by": "Helm"
+          },
+          "managedFields": [
+            {
+              "apiVersion": "apps/v1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:metadata": {
+                  "f:annotations": {
+                    ".": {},
+                    "f:field.cattle.io/publicEndpoints": {},
+                    "f:meta.helm.sh/release-name": {},
+                    "f:meta.helm.sh/release-namespace": {}
+                  },
+                  "f:labels": {
+                    ".": {},
+                    "f:app": {},
+                    "f:app.kubernetes.io/managed-by": {}
+                  }
+                },
+                "f:spec": {
+                  "f:minReadySeconds": {},
+                  "f:progressDeadlineSeconds": {},
+                  "f:replicas": {},
+                  "f:revisionHistoryLimit": {},
+                  "f:selector": {
+                    "f:matchLabels": {
+                      ".": {},
+                      "f:app": {}
+                    }
+                  },
+                  "f:strategy": {
+                    "f:rollingUpdate": {
+                      ".": {},
+                      "f:maxSurge": {},
+                      "f:maxUnavailable": {}
+                    },
+                    "f:type": {}
+                  },
+                  "f:template": {
+                    "f:metadata": {
+                      "f:labels": {
+                        ".": {},
+                        "f:app": {}
+                      }
+                    },
+                    "f:spec": {
+                      "f:containers": {
+                        "k:{\"name\":\"app\"}": {
+                          ".": {},
+                          "f:env": {
+                            ".": {}
+                          },
+                          "f:image": {},
+                          "f:imagePullPolicy": {},
+                          "f:name": {},
+                          "f:ports": {
+                            ".": {},
+                            "k:{\"containerPort\":9876,\"protocol\":\"TCP\"}": {
+                              ".": {},
+                              "f:containerPort": {},
+                              "f:name": {},
+                              "f:protocol": {}
+                            }
+                          },
+                          "f:resources": {},
+                          "f:terminationMessagePath": {},
+                          "f:terminationMessagePolicy": {}
+                        }
+                      },
+                      "f:dnsPolicy": {},
+                      "f:imagePullSecrets": {
+                        ".": {},
+                        "k:{\"name\":\"registry-eng-key\"}": {
+                          ".": {},
+                          "f:name": {}
+                        }
+                      },
+                      "f:restartPolicy": {},
+                      "f:schedulerName": {},
+                      "f:securityContext": {},
+                      "f:terminationGracePeriodSeconds": {}
+                    }
+                  }
+                }
+              },
+              "manager": "Go-http-client",
+              "operation": "Update",
+              "time": "2021-02-26T12:52:02Z"
+            },
+            {
+              "apiVersion": "apps/v1",
+              "fieldsType": "FieldsV1",
+              "fieldsV1": {
+                "f:metadata": {
+                  "f:annotations": {
+                    "f:deployment.kubernetes.io/revision": {}
+                  }
+                },
+                "f:status": {
+                  "f:availableReplicas": {},
+                  "f:conditions": {
+                    ".": {},
+                    "k:{\"type\":\"Available\"}": {
+                      ".": {},
+                      "f:lastTransitionTime": {},
+                      "f:lastUpdateTime": {},
+                      "f:message": {},
+                      "f:reason": {},
+                      "f:status": {},
+                      "f:type": {}
+                    },
+                    "k:{\"type\":\"Progressing\"}": {
+                      ".": {},
+                      "f:lastTransitionTime": {},
+                      "f:lastUpdateTime": {},
+                      "f:message": {},
+                      "f:reason": {},
+                      "f:status": {},
+                      "f:type": {}
+                    }
+                  },
+                  "f:observedGeneration": {},
+                  "f:readyReplicas": {},
+                  "f:replicas": {},
+                  "f:updatedReplicas": {}
+                }
+              },
+              "manager": "k3s",
+              "operation": "Update",
+              "time": "2021-02-26T12:53:02Z"
+            }
+          ],
+          "name": "platform-app",
+          "namespace": "platform-core",
+          "resourceVersion": "25781",
+          "selfLink": "/apis/apps/v1/namespaces/platform-core/deployments/platform-app",
+          "uid": "d18d5d90-a340-4697-XXXX-7ebb3cb414ce"
+        }
+      }
+    }
+  ]
+}

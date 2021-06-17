@@ -50,6 +50,40 @@ class ClientTest extends TestCase
 		$this->assertInstanceOf('GuzzleHttp\Client', $client->getGuzzleClient());
 	}
 
+	public function testStreamReturnsResponseObject()
+    {
+        $mockGuzzleClient = Mockery::mock('GuzzleHttp\Client');
+        $mockGuzzleClient->shouldReceive('request')->andReturn(new \GuzzleHttp\Psr7\Response());
+
+        $client = new Client([], $mockGuzzleClient);
+        $response = $client->sendRequest(
+            'GET', '/v1/deployments', [], [], true, null, ['stream' => true]
+        );
+
+        $this->assertInstanceOf(\GuzzleHttp\Psr7\Response::class, $response);
+    }
+
+    public function testStreamGetsResourceVersion()
+    {
+        $deploymentsTable = $this->getFixture('deployments/table.json');
+
+        $mockGuzzleClient = Mockery::mock('GuzzleHttp\Client');
+        $mockGuzzleClient->shouldReceive('request')->andReturn(
+            new \GuzzleHttp\Psr7\Response(200, [], $deploymentsTable)
+        );
+
+        $client = new Client([], $mockGuzzleClient);
+
+        $response = $client->sendRequest(
+            'GET', '/v1/deployments', [], [], true, null, ['stream' => true]
+        );
+
+        $requestOptions = $client->getRequestOptions();
+
+        $this->assertArrayHasKey('resourceVersion', $requestOptions['query']);
+        $this->assertSame('4372200', $requestOptions['query']['resourceVersion']);
+    }
+
 	// public function test_get_pods()
 	// {
 	// 	$request = $this->getMockGuzzleRequest();
